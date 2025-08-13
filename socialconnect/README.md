@@ -9,11 +9,8 @@ It allows users to **create posts, like, comment, and manage profiles**, providi
 
 Check out the app in action on my linkedin:
 
-[![Watch the demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)]
+[![Watch the demo]](https://www.linkedin.com/posts/dua-akbar-73686636b_flutter-supabase-getx-activity-7361394745409003521-q9kF)
 
-> Click the image to watch the demo video.
-
----
 
 ## ✨ Features
 
