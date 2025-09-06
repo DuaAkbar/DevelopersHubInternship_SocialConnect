@@ -32,15 +32,22 @@ class _HomepageState extends State<Homepage> {
             fontSize: 25,
           ),
         ),
-        centerTitle: true,
+
         actions: [
-           IconButton(
-          onPressed: () {
-            Get.toNamed("/notifications");
-          },
-          icon: Icon(Icons.notifications),
-        ),
-        ]
+          IconButton(
+            onPressed: () {
+              Get.toNamed("/notifications");
+            },
+            icon: Icon(Icons.notifications),
+          ),
+
+          IconButton(
+            onPressed: () {
+              Get.toNamed("/userslist");
+            },
+            icon: Icon(Icons.chat_bubble_outline_sharp),
+          ),
+        ],
       ),
       body: Obx(
         () => RefreshIndicator(

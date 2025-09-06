@@ -5,6 +5,8 @@ import 'package:socialconnect/controllers/postscontroller.dart';
 import 'package:socialconnect/model/posts.dart';
 import 'package:socialconnect/services/supabaseservices.dart';
 import 'package:socialconnect/utils/Helpers.dart';
+import 'package:socialconnect/views/profile.dart';
+import 'package:socialconnect/views/usersProfiles.dart';
 
 class Postcard extends StatefulWidget {
   final PostModel post;
@@ -43,12 +45,31 @@ class _PostcardState extends State<Postcard> {
                 children: [
                   ListTile(
                     isThreeLine: true,
-                    title: Text(
-                      widget.post.users!.metaData!.name!,
-                      style: TextStyle(
-                        fontFamily: 'Delius',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 19,
+                    title: GestureDetector(
+                      onTap: () {
+                        final currentId =
+                            SupabaseService.currentUser.value!.id.toString();
+                        final clickedId = widget.post.userId.toString();
+
+                        print("Clicked User: ${widget.post.userId}");
+                        print(
+                          "Current User: ${SupabaseService.currentUser.value!.id}",
+                        );
+
+                        if (clickedId == currentId) {
+                          Get.to(() => const Profile());
+                        } else {
+                          Get.to(() => Usersprofiles(user: widget.post.users!));
+                        }
+                      },
+
+                      child: Text(
+                        widget.post.users!.metaData!.name!,
+                        style: TextStyle(
+                          fontFamily: 'Delius',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 19,
+                        ),
                       ),
                     ),
                     subtitle: Text(
@@ -60,13 +81,12 @@ class _PostcardState extends State<Postcard> {
                       ),
                     ),
                     trailing: Text(
-                       style: TextStyle(
-                          fontFamily: 'Delius',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                        ),
-                      Helpers.formatDateTime(widget.post.createdAt!, 
+                      style: TextStyle(
+                        fontFamily: 'Delius',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
                       ),
+                      Helpers.formatDateTime(widget.post.createdAt!),
                     ),
                   ),
                   SizedBox(height: 2),
@@ -150,7 +170,7 @@ class _PostcardState extends State<Postcard> {
                       ),
                     ],
                   ),
-                   SizedBox(height: 8),
+                  SizedBox(height: 8),
                 ],
               ),
             ),

@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:socialconnect/controllers/profilecontroller.dart';
-import 'package:socialconnect/services/navigationservice.dart';
-import 'package:socialconnect/services/supabaseservices.dart';
+import 'package:socialconnect/controllers/usersProfilecontroller.dart';
+import 'package:socialconnect/model/user.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class Usersprofiles extends StatefulWidget {
+  final Users user;
+  const Usersprofiles({super.key, required this.user});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<Usersprofiles> createState() => _UsersprofilesState();
 }
 
-class _ProfileState extends State<Profile> {
-  NavigationServices navigationServices = Get.find<NavigationServices>();
+class _UsersprofilesState extends State<Usersprofiles> {
+  // NavigationServices navigationService = Get.find<NavigationServices>();
   Profilecontroller profilecontroller = Get.put(Profilecontroller());
+  Usersprofilecontroller usersprofilecontroller = Get.put(
+    Usersprofilecontroller(),
+  );
+
+  final user = Get.arguments;
   int selectedTab = 1;
   @override
   Widget build(BuildContext context) {
@@ -22,13 +28,14 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            navigationServices.currentPage.value =
-                navigationServices.previousPage.value;
+            // navigationService.currentPage.value =
+            //     navigationService.previousPage.value;
+            Get.back();
           },
-          icon:  Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back),
         ),
         title: Text(
-          "Profile",
+          widget.user.metaData?.name ?? 'No Name',
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontFamily: 'Delius',
@@ -37,41 +44,27 @@ class _ProfileState extends State<Profile> {
           ),
         ),
         centerTitle: true,
-
-         actions: [
-           IconButton(
-          onPressed: () {
-            Get.toNamed("/settings");
-          },
-          icon: Icon(Icons.settings),
-        ),
-        ]
       ),
       body: SingleChildScrollView(
-        padding:  EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
             SizedBox(height: 20),
             Column(
               children: [
-                Obx(
-                  () => CircleAvatar(
-                    radius: 45,
-                    backgroundImage:
-                        SupabaseService
-                                    .currentUser
-                                    .value!
-                                    .userMetadata?["image"] !=
-                                null
-                            ? NetworkImage(
-                              "https://massqohrwvyezbghqhho.supabase.co/storage/v1/object/public/${SupabaseService.currentUser.value!.userMetadata!["image"]}",
-                            )
-                            : AssetImage("assets/images/one.jpeg"),
-                  ),
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage:
+                      widget.user.metaData?.image != null
+                          ? NetworkImage(
+                            "https://massqohrwvyezbghqhho.supabase.co/storage/v1/object/public/${widget.user.metaData?.image}",
+                          )
+                          : AssetImage("assets/images/one.jpeg"),
                 ),
+
                 SizedBox(height: 12),
                 Text(
-                  SupabaseService.currentUser.value!.userMetadata!["name"],
+                  widget.user.metaData?.name ?? 'No Name',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontFamily: 'Delius',
@@ -81,11 +74,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 SizedBox(height: 6),
                 Text(
-                  SupabaseService
-                          .currentUser
-                          .value!
-                          .userMetadata!["description"] ??
-                      'Hi everyone',
+                  widget.user.metaData?.description ?? 'Hi everyone',
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontFamily: 'Delius',
@@ -93,28 +82,35 @@ class _ProfileState extends State<Profile> {
                     fontSize: 17,
                   ),
                 ),
-                 SizedBox(height: 16),
+                SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      Get.toNamed(
-                        "/profileupdate",
-                      ); 
-                    },
-                    icon: Icon(Icons.edit),
-                    label: Text("Edit Profile",
+                  child: Obx(
+                    () => OutlinedButton.icon(
+                      onPressed: () {
+                        usersprofilecontroller.togglefollow();
+                      },
+                      icon: Icon(
+                        usersprofilecontroller.isFollowing.value
+                            ? Icons.check
+                            : Icons.person_add,
+                      ),
+                      label: Text(
+                        usersprofilecontroller.isFollowing.value
+                            ? "Following"
+                            : "Follow",
                         style: TextStyle(
-                        fontFamily: 'Delius',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                          fontFamily: 'Delius',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
                       ),
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        foregroundColor: Theme.of(context).colorScheme.primary,
                       ),
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      foregroundColor: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),

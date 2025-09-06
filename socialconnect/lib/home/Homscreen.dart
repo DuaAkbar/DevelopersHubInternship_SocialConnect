@@ -24,9 +24,9 @@ class _HomescreenState extends State<Homescreen> {
           },
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: ""),
+            NavigationDestination(icon: Icon(Icons.search), label: ""),
             NavigationDestination(icon: Icon(Icons.add), label: ""),
-            NavigationDestination(icon: Icon(Icons.person), label: ""),
-            NavigationDestination(icon: Icon(Icons.settings), label: ""),
+            NavigationDestination(icon: Icon(Icons.person), label: "")
           ]
         ),
       ),
